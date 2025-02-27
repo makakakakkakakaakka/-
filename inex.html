@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ガーネースOS</title>
+    <style>
+        /* 背景設定 */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        /* タスクバー */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            color: white;
+        }
+
+        .start-button {
+            background: #444;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            user-select: none;
+        }
+
+        /* スタートメニュー */
+        .start-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            width: 200px;
+            background: rgba(50, 50, 50, 0.9);
+            border-radius: 5px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .start-menu li {
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .start-menu li:hover {
+            background: #666;
+        }
+
+        /* ウィンドウデザイン */
+        .window {
+            width: 500px;
+            height: 400px;
+            background: white;
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            border: 2px solid black;
+            display: none;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .window-header {
+            background: black;
+            color: white;
+            padding: 10px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .window-content {
+            padding: 10px;
+            overflow: auto;
+            flex-grow: 1;
+        }
+
+        .window-controls span {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .window-controls span:hover {
+            color: red;
+        }
+
+        /* デスクトップアイコン */
+        .desktop {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .desktop-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            border-radius: 5px;
+            user-select: none;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="desktop" id="desktop">
+        <!-- デスクトップアイコン（起動するアプリのショートカット） -->
+        <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
+    </div>
+
+    <div class="taskbar">
+        <!-- タスクバー -->
+        <div class="start-button" onclick="toggleStartMenu()">⚙ スタート</div>
+    </div>
+
+    <div class="start-menu" id="startMenu">
+        <!-- スタートメニュー -->
+        <ul>
+            <li onclick="openWindow('browserWindow')">🌐 ブラウザ</li>
+            <li onclick="downloadApp('電卓', 'calculatorWindow')">🖩 電卓をダウンロード</li>
+            <li onclick="downloadApp('メモ帳', 'notepadWindow')">📓 メモ帳をダウンロード</li>
+        </ul>
+    </div>
+
+    <!-- ブラウザウィンドウ -->
+    <div id="browserWindow" class="window">
+        <div class="window-header">
+            <span>ブラウザ</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('browserWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
+            <iframe id="browserFrame" src="https://www.google.com" width="100%" height="90%"></iframe>
+        </div>
+    </div>
+
+    <!-- 電卓ウィンドウ -->
+    <div id="calculatorWindow" class="window">
+        <div class="window-header">
+            <span>電卓</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('calculatorWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <iframe src="https://www.online-calculator.com/" width="100%" height="90%"></iframe>
+        </div>
+    </div>
+
+    <!-- メモ帳ウィンドウ -->
+    <div id="notepadWindow" class="window">
+        <div class="window-header">
+            <span>メモ帳</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('notepadWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <textarea style="width: 100%; height: 100%;"></textarea>
+        </div>
+    </div>
+
+    <script>
+        // スタートメニューの表示/非表示を切り替える
+        function toggleStartMenu() {
+            const menu = document.getElementById("startMenu");
+            if (menu.style.visibility === "visible") {
+                menu.style.visibility = "hidden";
+                menu.style.opacity = 0;
+            } else {
+                menu.style.visibility = "visible";
+                menu.style.opacity = 1;
+            }
+        }
+
+        // ウィンドウを開く
+        function openWindow(id) {
+            document.getElementById(id).style.display = "block";
+        }
+
+        // ウィンドウを閉じる
+        function closeWindow(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        // Google検索機能
+        function searchGoogle() {
+            const query = document.getElementById("searchInput").value;
+            document.getElementById("browserFrame").src = "https://www.google.com/search?q=" + encodeURIComponent(query);
+        }
+
+        // アプリをデスクトップに追加
+        function downloadApp(name, id) {
+            if (!document.getElementById(id)) {
+                let newIcon = document.createElement("div");
+                newIcon.className = "desktop-icon";
+                newIcon.innerText = name;
+                newIcon.onclick = function() { openWindow(id); };
+                document.getElementById("desktop").appendChild(newIcon);
+            }
+        }
+    </script>
+
+</body>
+</html>
