@@ -14,6 +14,38 @@
             font-family: Arial, sans-serif;
         }
 
+        /* ログインフォーム */
+        .login-form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            color: white;
+            width: 300px;
+            text-align: center;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         /* タスクバー */
         .taskbar {
             position: fixed;
@@ -144,19 +176,29 @@
 </head>
 <body>
 
-    <div class="desktop" id="desktop">
-        <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
+    <!-- ログインフォーム -->
+    <div class="login-form" id="loginForm">
+        <h2>ログイン</h2>
+        <input type="text" id="username" placeholder="ユーザー名">
+        <input type="password" id="password" placeholder="パスワード">
+        <button onclick="login()">ログイン</button>
+        <p id="loginError" style="color:red; display:none;">ユーザー名かパスワードが違います。</p>
     </div>
 
-    <div class="taskbar">
+    <!-- ガーネースOSのデスクトップ（ログイン後に表示） -->
+    <div class="desktop" id="desktop" style="display:none;">
+        <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
+        <div class="desktop-icon" id="fileIcon" style="display: none;">📄</div>
+    </div>
+
+    <div class="taskbar" id="taskbar" style="display:none;">
         <div class="start-button" onclick="toggleStartMenu()">⚙ スタート</div>
     </div>
 
     <div class="start-menu" id="startMenu">
         <ul>
             <li onclick="openWindow('browserWindow')">🌐 ブラウザ</li>
-            <li onclick="downloadApp('電卓', 'calculatorWindow')">🖩 電卓をダウンロード</li>
-            <li onclick="downloadApp('メモ帳', 'notepadWindow')">📓 メモ帳をダウンロード</li>
+            <li onclick="searchAndDownload()">🔍 ファイル検索</li>
         </ul>
     </div>
 
@@ -198,6 +240,22 @@
     </div>
 
     <script>
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // 簡単なユーザー名とパスワードのチェック
+            if (username === "user" && password === "password123") {
+                // ログイン成功
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("desktop").style.display = "flex";
+                document.getElementById("taskbar").style.display = "flex";
+            } else {
+                // ログイン失敗
+                document.getElementById("loginError").style.display = "block";
+            }
+        }
+
         function toggleStartMenu() {
             const menu = document.getElementById("startMenu");
             if (menu.style.display === "block") {
@@ -217,18 +275,29 @@
 
         function searchGoogle() {
             const query = document.getElementById("searchInput").value;
-            const url = "https://www.google.com/search?q=" + encodeURIComponent(query);
-            window.open(url, "_blank");
+            const iframe = document.getElementById("browserFrame");
+            iframe.src = "https://www.google.com/search?q=" + encodeURIComponent(query);
         }
 
-        function downloadApp(name, id) {
-            if (!document.getElementById(id)) {
-                let newIcon = document.createElement("div");
-                newIcon.className = "desktop-icon";
-                newIcon.innerText = name;
-                newIcon.onclick = function() { openWindow(id); };
-                document.getElementById("desktop").appendChild(newIcon);
+        function searchAndDownload() {
+            const fileUrl = prompt("ダウンロードしたいファイルのURLを入力してください:");
+
+            if (fileUrl) {
+                const fileName = fileUrl.split("/").pop();
+                downloadFile(fileUrl, fileName);
             }
+        }
+
+        function downloadFile(url, fileName) {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.click();
+
+            // ダウンロード後にデスクトップにアイコンを表示
+            setTimeout(() => {
+                document.getElementById("fileIcon").style.display = "block";
+            }, 2000); // ダウンロード完了後にアイコン表示
         }
     </script>
 
