@@ -44,7 +44,7 @@
             width: 200px;
             background: rgba(50, 50, 50, 0.9);
             border-radius: 5px;
-            visibility: hidden;
+            display: none;
             opacity: 0;
             transition: opacity 0.2s ease-in-out;
         }
@@ -76,7 +76,6 @@
             border: 2px solid black;
             display: none;
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-            z-index: 100;
         }
 
         .window-header {
@@ -121,29 +120,39 @@
             line-height: 50px;
             cursor: pointer;
             border-radius: 5px;
-            user-select: none;
         }
 
         .search-bar {
             width: 100%;
             padding: 5px;
         }
+
+        .textarea {
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px;
+            border: none;
+        }
+
+        .calculator iframe {
+            width: 100%;
+            height: 90%;
+        }
     </style>
 </head>
 <body>
 
     <div class="desktop" id="desktop">
-        <!-- デスクトップアイコン（起動するアプリのショートカット） -->
         <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
     </div>
 
     <div class="taskbar">
-        <!-- タスクバー -->
         <div class="start-button" onclick="toggleStartMenu()">⚙ スタート</div>
     </div>
 
     <div class="start-menu" id="startMenu">
-        <!-- スタートメニュー -->
         <ul>
             <li onclick="openWindow('browserWindow')">🌐 ブラウザ</li>
             <li onclick="downloadApp('電卓', 'calculatorWindow')">🖩 電卓をダウンロード</li>
@@ -151,7 +160,6 @@
         </ul>
     </div>
 
-    <!-- ブラウザウィンドウ -->
     <div id="browserWindow" class="window">
         <div class="window-header">
             <span>ブラウザ</span>
@@ -165,7 +173,6 @@
         </div>
     </div>
 
-    <!-- 電卓ウィンドウ -->
     <div id="calculatorWindow" class="window">
         <div class="window-header">
             <span>電卓</span>
@@ -173,12 +180,11 @@
                 <span onclick="closeWindow('calculatorWindow')">✖</span>
             </div>
         </div>
-        <div class="window-content">
+        <div class="window-content calculator">
             <iframe src="https://www.online-calculator.com/" width="100%" height="90%"></iframe>
         </div>
     </div>
 
-    <!-- メモ帳ウィンドウ -->
     <div id="notepadWindow" class="window">
         <div class="window-header">
             <span>メモ帳</span>
@@ -187,40 +193,34 @@
             </div>
         </div>
         <div class="window-content">
-            <textarea style="width: 100%; height: 100%;"></textarea>
+            <textarea class="textarea" placeholder="メモを入力してください..."></textarea>
         </div>
     </div>
 
     <script>
-        // スタートメニューの表示/非表示を切り替える
         function toggleStartMenu() {
             const menu = document.getElementById("startMenu");
-            if (menu.style.visibility === "visible") {
-                menu.style.visibility = "hidden";
-                menu.style.opacity = 0;
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
             } else {
-                menu.style.visibility = "visible";
-                menu.style.opacity = 1;
+                menu.style.display = "block";
             }
         }
 
-        // ウィンドウを開く
         function openWindow(id) {
             document.getElementById(id).style.display = "block";
         }
 
-        // ウィンドウを閉じる
         function closeWindow(id) {
             document.getElementById(id).style.display = "none";
         }
 
-        // Google検索機能
         function searchGoogle() {
             const query = document.getElementById("searchInput").value;
-            document.getElementById("browserFrame").src = "https://www.google.com/search?q=" + encodeURIComponent(query);
+            const url = "https://www.google.com/search?q=" + encodeURIComponent(query);
+            window.open(url, "_blank");
         }
 
-        // アプリをデスクトップに追加
         function downloadApp(name, id) {
             if (!document.getElementById(id)) {
                 let newIcon = document.createElement("div");
