@@ -1,293 +1,257 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garnace OS</title>
+    <title>Garneace XP</title>
     <style>
-        /* ベーススタイル */
         body {
-            background-color: #2d2d2d;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            cursor: url('path/to/your/custom-cursor.png'), auto;
+            font-family: "MS UI Gothic", sans-serif;
+            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
+            background-size: cover;
         }
 
-        /* タスクバー */
-        #taskbar {
+        /* タスクバーのデザイン */
+        .taskbar {
             position: fixed;
             bottom: 0;
-            left: 0;
             width: 100%;
             height: 40px;
-            background-color: #333;
+            background: linear-gradient(to bottom, #1c5da8, #104e8b);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             padding: 0 10px;
             color: white;
         }
 
-        #taskbar button {
-            background-color: #444;
-            border: none;
-            color: white;
-            padding: 8px;
+        .start-button {
+            background: url('start-button.png') no-repeat center;
+            width: 80px;
+            height: 30px;
             cursor: pointer;
         }
 
-        #taskbar button:hover {
-            background-color: #555;
-        }
-
-        /* スタートメニュー */
-        #startMenu {
-            position: absolute;
-            bottom: 40px;
-            left: 0;
-            width: 200px;
-            background-color: #444;
-            display: none;
-            color: white;
-            border-radius: 5px;
-            z-index: 10;
-        }
-
-        #startMenu button {
-            background-color: #555;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        #startMenu button:hover {
-            background-color: #666;
-        }
-
-        /* ウィンドウのスタイル */
+        /* ウィンドウのデザイン */
         .window {
-            width: 400px;
-            height: 300px;
-            background-color: #444;
+            width: 600px;
+            height: 450px;
+            background: white;
             position: absolute;
-            top: 50px;
-            left: 50px;
+            top: 20%;
+            left: 30%;
+            border: 2px solid black;
             display: none;
-            border: 2px solid #666;
-            z-index: 5;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-            border-radius: 5px;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            padding: 10px;
         }
 
-        .window header {
-            background-color: #222;
+        .window-header {
+            background: black;
             color: white;
             padding: 10px;
             cursor: move;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .window header .minimize {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-
-        .window header .close {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-
-        .window .content {
+        .window-content {
             padding: 10px;
-            height: calc(100% - 50px);
             overflow: auto;
         }
 
-        /* メモ帳 */
-        #notepad textarea {
-            width: 100%;
-            height: 80%;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 10px;
-        }
-
-        /* 電卓 */
-        #calculator button {
-            background-color: #555;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 60px;
-            height: 60px;
-            margin: 5px;
+        .window-controls span {
+            margin-left: 10px;
             cursor: pointer;
         }
 
-        #calculator button:hover {
-            background-color: #666;
+        .window-controls span:hover {
+            color: red;
         }
 
-        /* カスタムカーソル */
-        body {
-            cursor: url('path/to/your/custom-cursor.png'), auto;
+        /* サーチバー */
+        .search-bar {
+            width: 100%;
+            padding: 5px;
         }
 
-        /* iframeの表示 */
-        iframe {
+        /* iframeコンテナ */
+        .iframe-container {
+            width: 100%;
+            height: 85%;
+        }
+
+        .iframe-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .window iframe {
-            border-radius: 5px;
+        /* メモ帳のデザイン */
+        textarea {
+            width: 100%;
+            height: 100%;
+            resize: none;
+        }
+
+        /* 電卓 */
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+
+        .calculator button {
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        /* デスクトップアイコン */
+        .desktop-icon {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px;
         }
     </style>
 </head>
 <body>
 
+    <!-- デスクトップアイコン -->
+    <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
+    <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
+    <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
+    <div class="desktop-icon" onclick="downloadFile()">📄 ダウンロード</div>
+
     <!-- タスクバー -->
-    <div id="taskbar">
-        <button onclick="toggleStartMenu()">Start</button>
-        <div id="taskbarIcons"></div>
+    <div class="taskbar">
+        <div class="start-button" onclick="openWindow('startMenu')">⚙ スタート</div>
     </div>
 
     <!-- スタートメニュー -->
-    <div id="startMenu">
-        <button onclick="openWindow('notepad')">Notepad</button>
-        <button onclick="openWindow('calculator')">Calculator</button>
-        <button onclick="openWindow('browser')">Browser</button>
-    </div>
-
-    <!-- メモ帳ウィンドウ -->
-    <div id="notepad" class="window">
-        <header>
-            Notepad
-            <span class="minimize" onclick="minimizeWindow('notepad')">-</span>
-            <span class="close" onclick="closeWindow('notepad')">X</span>
-        </header>
-        <div class="content">
-            <textarea id="notepadContent"></textarea>
-        </div>
-    </div>
-
-    <!-- 電卓ウィンドウ -->
-    <div id="calculator" class="window">
-        <header>
-            Calculator
-            <span class="minimize" onclick="minimizeWindow('calculator')">-</span>
-            <span class="close" onclick="closeWindow('calculator')">X</span>
-        </header>
-        <div class="content">
-            <input type="text" id="calcDisplay" disabled />
-            <div>
-                <button onclick="calcInput(1)">1</button>
-                <button onclick="calcInput(2)">2</button>
-                <button onclick="calcInput(3)">3</button>
-                <button onclick="calcCalculate()">=</button>
+    <div id="startMenu" class="window" style="top: 100px; left: 10px; width: 200px;">
+        <div class="window-header">
+            <span>スタートメニュー</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('startMenu')">✖</span>
             </div>
+        </div>
+        <div class="window-content">
+            <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
+            <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
+            <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
         </div>
     </div>
 
     <!-- ブラウザウィンドウ -->
-    <div id="browser" class="window">
-        <header>
-            Browser
-            <span class="minimize" onclick="minimizeWindow('browser')">-</span>
-            <span class="close" onclick="closeWindow('browser')">X</span>
-        </header>
-        <div class="content">
-            <iframe id="browserFrame" src="https://www.google.com"></iframe>
+    <div id="browserWindow" class="window">
+        <div class="window-header">
+            <span>ブラウザ</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('browserWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
+            <div class="iframe-container">
+                <iframe id="browserFrame" src="https://www.bing.com"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- メモ帳 -->
+    <div id="notepadWindow" class="window">
+        <div class="window-header">
+            <span>メモ帳</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('notepadWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <textarea id="notepad"></textarea>
+            <button onclick="saveText()">保存</button>
+        </div>
+    </div>
+
+    <!-- 電卓 -->
+    <div id="calculatorWindow" class="window">
+        <div class="window-header">
+            <span>電卓</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('calculatorWindow')">✖</span>
+            </div>
+        </div>
+        <div class="window-content">
+            <input type="text" id="calcDisplay" readonly>
+            <div class="calculator">
+                <button onclick="calcInput('7')">7</button>
+                <button onclick="calcInput('8')">8</button>
+                <button onclick="calcInput('9')">9</button>
+                <button onclick="calcInput('/')">÷</button>
+                <button onclick="calcInput('4')">4</button>
+                <button onclick="calcInput('5')">5</button>
+                <button onclick="calcInput('6')">6</button>
+                <button onclick="calcInput('*')">×</button>
+                <button onclick="calcInput('1')">1</button>
+                <button onclick="calcInput('2')">2</button>
+                <button onclick="calcInput('3')">3</button>
+                <button onclick="calcInput('-')">−</button>
+                <button onclick="calcInput('0')">0</button>
+                <button onclick="calcInput('.')">.</button>
+                <button onclick="calcCalculate()">=</button>
+                <button onclick="calcInput('+')">+</button>
+            </div>
         </div>
     </div>
 
     <script>
-        let dragItem = null;
-
-        // ドラッグ機能
-        function startDrag(event, windowId) {
-            dragItem = document.getElementById(windowId);
-            let offsetX = event.clientX - dragItem.getBoundingClientRect().left;
-            let offsetY = event.clientY - dragItem.getBoundingClientRect().top;
-
-            function moveWindow(e) {
-                dragItem.style.left = e.clientX - offsetX + 'px';
-                dragItem.style.top = e.clientY - offsetY + 'px';
-            }
-
-            function stopDrag() {
-                document.removeEventListener('mousemove', moveWindow);
-                document.removeEventListener('mouseup', stopDrag);
-            }
-
-            document.addEventListener('mousemove', moveWindow);
-            document.addEventListener('mouseup', stopDrag);
+        function openWindow(id) {
+            document.getElementById(id).style.display = "block";
         }
 
-        // ウィンドウ操作
-        function openWindow(windowId) {
-            document.getElementById(windowId).style.display = 'block';
-            addTaskbarIcon(windowId);
+        function closeWindow(id) {
+            document.getElementById(id).style.display = "none";
         }
 
-        function closeWindow(windowId) {
-            document.getElementById(windowId).style.display = 'none';
-            removeTaskbarIcon(windowId);
+        function searchGoogle() {
+            const query = document.getElementById("searchInput").value;
+            document.getElementById("browserFrame").src = "https://www.bing.com/search?q=" + encodeURIComponent(query);
         }
 
-        function minimizeWindow(windowId) {
-            document.getElementById(windowId).style.display = 'none';
-            removeTaskbarIcon(windowId);
+        function saveText() {
+            const text = document.getElementById("notepad").value;
+            localStorage.setItem("notepadData", text);
         }
 
-        // タスクバーのアイコン管理
-        function addTaskbarIcon(windowId) {
-            let icon = document.createElement('div');
-            icon.classList.add('taskbarIcon');
-            icon.textContent = windowId;
-            icon.onclick = function () {
-                document.getElementById(windowId).style.display = 'block';
-            };
-            document.getElementById('taskbarIcons').appendChild(icon);
-        }
-
-        function removeTaskbarIcon(windowId) {
-            let taskbarIcons = document.getElementById('taskbarIcons');
-            let icons = taskbarIcons.getElementsByClassName('taskbarIcon');
-            for (let icon of icons) {
-                if (icon.textContent === windowId) {
-                    taskbarIcons.removeChild(icon);
-                }
-            }
-        }
-
-        // スタートメニューの表示
-        function toggleStartMenu() {
-            let startMenu = document.getElementById('startMenu');
-            startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // 電卓操作
-        function calcInput(value) {
-            document.getElementById('calcDisplay').value += value;
+        function calcInput(val) {
+            document.getElementById("calcDisplay").value += val;
         }
 
         function calcCalculate() {
-            let display = document.getElementById('calcDisplay');
-            display.value = eval(display.value);
+            document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
+        }
+
+        function downloadFile() {
+            const fileName = "sampleFile.txt";
+            const fileContent = "これは仮想的なダウンロードファイルです。";
+            const file = new Blob([fileContent], { type: "text/plain" });
+            const fileURL = URL.createObjectURL(file);
+
+            // デスクトップにアイコンを追加
+            const fileIcon = document.createElement('div');
+            fileIcon.classList.add('desktop-icon');
+            fileIcon.innerText = fileName;
+            fileIcon.onclick = function() {
+                window.open(fileURL, '_blank');
+            };
+            
+            // 仮想デスクトップに追加
+            document.body.appendChild(fileIcon);
         }
     </script>
 
