@@ -3,72 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows XP 風 OS</title>
+    <title>Garneace XP</title>
     <style>
-        /* === XP風のデザイン === */
+        /* XP風デザイン */
         body {
             margin: 0;
             overflow: hidden;
-            background: url('https://i.imgur.com/7YzafY1.jpg') no-repeat center center fixed;
+            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
             background-size: cover;
-            font-family: Tahoma, sans-serif;
+            font-family: "MS UI Gothic", sans-serif;
         }
 
-        /* === タスクバー === */
+        /* タスクバー */
         .taskbar {
             position: fixed;
             bottom: 0;
             width: 100%;
             height: 40px;
-            background: #003399;
+            background: linear-gradient(to bottom, #1c5da8, #104e8b);
             display: flex;
             align-items: center;
-            color: white;
+            justify-content: space-between;
             padding: 0 10px;
+            color: white;
         }
 
         .start-button {
-            background: #0066cc;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* === デスクトップアイコン === */
-        .desktop {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .icon {
+            background: url('start-button.png') no-repeat center;
             width: 80px;
-            text-align: center;
-            position: absolute;
+            height: 30px;
             cursor: pointer;
         }
 
-        .icon img {
-            width: 50px;
-            height: 50px;
+        /* スタートメニュー */
+        .start-menu {
+            position: absolute;
+            bottom: 50px;
+            left: 10px;
+            width: 250px;
+            background: #003399;
+            border-radius: 5px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
         }
 
-        /* === ウィンドウのデザイン === */
+        .start-menu ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .start-menu li {
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .start-menu li:hover {
+            background: #666;
+        }
+
+        /* ウィンドウデザイン */
         .window {
-            width: 400px;
-            height: 300px;
+            width: 500px;
+            height: 400px;
             background: white;
-            border: 2px solid #003399;
             position: absolute;
-            top: 50px;
-            left: 50px;
+            top: 20%;
+            left: 30%;
+            border: 2px solid black;
             display: none;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
         }
 
         .window-header {
-            background: #003399;
+            background: black;
             color: white;
-            padding: 5px;
+            padding: 10px;
             cursor: move;
             display: flex;
             justify-content: space-between;
@@ -76,98 +88,87 @@
 
         .window-content {
             padding: 10px;
+            overflow: auto;
+            flex-grow: 1;
         }
 
-        /* === メモ帳 & 電卓のスタイル === */
-        .notepad textarea {
+        .window-controls span {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .window-controls span:hover {
+            color: red;
+        }
+
+        /* デスクトップアイコン */
+        .desktop {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .desktop-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 5px;
+        }
+
+        .textarea {
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            padding: 5px;
+            border: none;
+        }
+
+        .calculator iframe {
             width: 100%;
             height: 90%;
-        }
-
-        .calculator input {
-            width: 100%;
-            font-size: 20px;
         }
     </style>
 </head>
 <body>
 
-    <!-- デスクトップ領域 -->
-    <div class="desktop" id="desktop"></div>
-
-    <!-- タスクバー -->
-    <div class="taskbar">
-        <div class="start-button" onclick="openWindow('startMenu')">スタート</div>
+    <div class="desktop" id="desktop">
+        <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
+        <div class="desktop-icon" id="fileIcon" style="display: none;">📄</div>
     </div>
 
-    <!-- スタートメニュー -->
-    <div class="window" id="startMenu" style="bottom: 50px; left: 10px; width: 150px;">
-        <div class="window-header">
-            <span>スタート</span>
-            <span onclick="closeWindow('startMenu')">✖</span>
-        </div>
-        <div class="window-content">
-            <div onclick="openWindow('browserWindow')">🌐 ブラウザ</div>
-            <div onclick="openWindow('notepadWindow')">📝 メモ帳</div>
-            <div onclick="openWindow('calculatorWindow')">🔢 電卓</div>
-        </div>
+    <div class="taskbar" id="taskbar">
+        <div class="start-button" onclick="toggleStartMenu()">⚙ スタート</div>
     </div>
 
-    <!-- ブラウザウィンドウ -->
-    <div class="window" id="browserWindow">
+    <div class="start-menu" id="startMenu">
+        <ul>
+            <li onclick="openWindow('browserWindow')">🌐 ブラウザ</li>
+            <li onclick="searchAndDownload()">🔍 ファイル検索</li>
+        </ul>
+    </div>
+
+    <div id="browserWindow" class="window">
         <div class="window-header">
             <span>ブラウザ</span>
-            <span onclick="closeWindow('browserWindow')">✖</span>
+            <div class="window-controls">
+                <span onclick="closeWindow('browserWindow')">✖</span>
+            </div>
         </div>
         <div class="window-content">
-            <input type="text" id="searchInput" placeholder="Google検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
-            <iframe id="browserFrame" src="https://www.google.com" width="100%" height="200px"></iframe>
-        </div>
-    </div>
-
-    <!-- メモ帳ウィンドウ -->
-    <div class="window" id="notepadWindow">
-        <div class="window-header">
-            <span>メモ帳</span>
-            <span onclick="closeWindow('notepadWindow')">✖</span>
-        </div>
-        <div class="window-content">
-            <textarea id="notepadText"></textarea>
-        </div>
-    </div>
-
-    <!-- 電卓ウィンドウ -->
-    <div class="window" id="calculatorWindow">
-        <div class="window-header">
-            <span>電卓</span>
-            <span onclick="closeWindow('calculatorWindow')">✖</span>
-        </div>
-        <div class="window-content">
-            <input type="text" id="calcInput" readonly>
-            <div>
-                <button onclick="calc('1')">1</button>
-                <button onclick="calc('2')">2</button>
-                <button onclick="calc('3')">3</button>
-                <button onclick="calc('+')">+</button>
-            </div>
-            <div>
-                <button onclick="calc('4')">4</button>
-                <button onclick="calc('5')">5</button>
-                <button onclick="calc('6')">6</button>
-                <button onclick="calc('-')">-</button>
-            </div>
-            <div>
-                <button onclick="calc('7')">7</button>
-                <button onclick="calc('8')">8</button>
-                <button onclick="calc('9')">9</button>
-                <button onclick="calc('*')">×</button>
-            </div>
-            <div>
-                <button onclick="calc('0')">0</button>
-                <button onclick="calc('.')">.</button>
-                <button onclick="calc('=')">=</button>
-                <button onclick="calc('/')">÷</button>
-            </div>
+            <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
+            <iframe id="browserFrame" src="https://www.google.com" width="100%" height="90%"></iframe>
         </div>
     </div>
 
@@ -180,31 +181,24 @@
             document.getElementById(id).style.display = "none";
         }
 
+        function toggleStartMenu() {
+            const menu = document.getElementById("startMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
         function searchGoogle() {
             const query = document.getElementById("searchInput").value;
-            document.getElementById("browserFrame").src = "https://www.google.com/search?q=" + encodeURIComponent(query);
+            window.open("https://www.google.com/search?q=" + encodeURIComponent(query));
         }
 
-        function calc(value) {
-            const input = document.getElementById("calcInput");
-            if (value === "=") {
-                input.value = eval(input.value);
-            } else {
-                input.value += value;
+        function searchAndDownload() {
+            const fileName = prompt("ダウンロードするファイル名を入力してください:");
+            if (fileName) {
+                const fileIcon = document.getElementById("fileIcon");
+                fileIcon.style.display = "block";
+                fileIcon.innerText = fileName;
             }
         }
-
-        function createIcon(name, icon, target) {
-            const iconElement = document.createElement("div");
-            iconElement.className = "icon";
-            iconElement.innerHTML = `<img src="${icon}"><div>${name}</div>`;
-            iconElement.onclick = () => openWindow(target);
-            document.getElementById("desktop").appendChild(iconElement);
-        }
-
-        createIcon("ブラウザ", "https://cdn-icons-png.flaticon.com/512/732/732212.png", "browserWindow");
-        createIcon("メモ帳", "https://cdn-icons-png.flaticon.com/512/1828/1828884.png", "notepadWindow");
-        createIcon("電卓", "https://cdn-icons-png.flaticon.com/512/1680/1680332.png", "calculatorWindow");
     </script>
 
 </body>
