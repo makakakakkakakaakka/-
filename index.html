@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ガーネースOS</title>
     <style>
-        /* 背景設定 */
+        /* === 基本設定 === */
         body {
             margin: 0;
             overflow: hidden;
@@ -14,39 +14,7 @@
             font-family: Arial, sans-serif;
         }
 
-        /* ログインフォーム */
-        .login-form {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            padding: 30px;
-            border-radius: 10px;
-            color: white;
-            width: 300px;
-            text-align: center;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .login-form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* タスクバー */
+        /* === タスクバー === */
         .taskbar {
             position: fixed;
             bottom: 0;
@@ -68,7 +36,7 @@
             user-select: none;
         }
 
-        /* スタートメニュー */
+        /* === スタートメニュー === */
         .start-menu {
             position: absolute;
             bottom: 60px;
@@ -97,10 +65,10 @@
             background: #666;
         }
 
-        /* ウィンドウデザイン */
+        /* === ウィンドウ === */
         .window {
-            width: 500px;
-            height: 400px;
+            width: 600px;
+            height: 500px;
             background: white;
             position: absolute;
             top: 20%;
@@ -121,37 +89,6 @@
 
         .window-content {
             padding: 10px;
-            overflow: auto;
-            flex-grow: 1;
-        }
-
-        .window-controls span {
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        .window-controls span:hover {
-            color: red;
-        }
-
-        /* デスクトップアイコン */
-        .desktop {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .desktop-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            line-height: 50px;
-            cursor: pointer;
-            border-radius: 5px;
         }
 
         .search-bar {
@@ -159,49 +96,49 @@
             padding: 5px;
         }
 
-        .textarea {
-            width: 100%;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            padding: 5px;
-            border: none;
-        }
-
-        .calculator iframe {
+        .browser iframe {
             width: 100%;
             height: 90%;
+        }
+
+        /* === デスクトップファイルアイコン === */
+        .desktop {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-icon {
+            width: 80px;
+            text-align: center;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        .file-icon img {
+            width: 50px;
+            height: 50px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ログインフォーム -->
-    <div class="login-form" id="loginForm">
-        <h2>ログイン</h2>
-        <input type="text" id="username" placeholder="ユーザー名">
-        <input type="password" id="password" placeholder="パスワード">
-        <button onclick="login()">ログイン</button>
-        <p id="loginError" style="color:red; display:none;">ユーザー名かパスワードが違います。</p>
-    </div>
+    <!-- デスクトップ領域 -->
+    <div class="desktop" id="desktop"></div>
 
-    <!-- ガーネースOSのデスクトップ（ログイン後に表示） -->
-    <div class="desktop" id="desktop" style="display:none;">
-        <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐</div>
-        <div class="desktop-icon" id="fileIcon" style="display: none;">📄</div>
-    </div>
-
-    <div class="taskbar" id="taskbar" style="display:none;">
+    <!-- タスクバー -->
+    <div class="taskbar" id="taskbar">
         <div class="start-button" onclick="toggleStartMenu()">⚙ スタート</div>
     </div>
 
+    <!-- スタートメニュー -->
     <div class="start-menu" id="startMenu">
         <ul>
             <li onclick="openWindow('browserWindow')">🌐 ブラウザ</li>
-            <li onclick="searchAndDownload()">🔍 ファイル検索</li>
         </ul>
     </div>
 
+    <!-- ブラウザウィンドウ -->
     <div id="browserWindow" class="window">
         <div class="window-header">
             <span>ブラウザ</span>
@@ -210,59 +147,15 @@
             </div>
         </div>
         <div class="window-content">
-            <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
-            <iframe id="browserFrame" src="https://www.google.com" width="100%" height="90%"></iframe>
-        </div>
-    </div>
-
-    <div id="calculatorWindow" class="window">
-        <div class="window-header">
-            <span>電卓</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('calculatorWindow')">✖</span>
-            </div>
-        </div>
-        <div class="window-content calculator">
-            <iframe src="https://www.online-calculator.com/" width="100%" height="90%"></iframe>
-        </div>
-    </div>
-
-    <div id="notepadWindow" class="window">
-        <div class="window-header">
-            <span>メモ帳</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('notepadWindow')">✖</span>
-            </div>
-        </div>
-        <div class="window-content">
-            <textarea class="textarea" placeholder="メモを入力してください..."></textarea>
+            <input class="search-bar" id="searchInput" type="text" placeholder="Googleで検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
+            <iframe id="browserFrame" src="https://www.google.com"></iframe>
         </div>
     </div>
 
     <script>
-        function login() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            // 簡単なユーザー名とパスワードのチェック
-            if (username === "user" && password === "password123") {
-                // ログイン成功
-                document.getElementById("loginForm").style.display = "none";
-                document.getElementById("desktop").style.display = "flex";
-                document.getElementById("taskbar").style.display = "flex";
-            } else {
-                // ログイン失敗
-                document.getElementById("loginError").style.display = "block";
-            }
-        }
-
         function toggleStartMenu() {
             const menu = document.getElementById("startMenu");
-            if (menu.style.display === "block") {
-                menu.style.display = "none";
-            } else {
-                menu.style.display = "block";
-            }
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
         }
 
         function openWindow(id) {
@@ -279,26 +172,37 @@
             iframe.src = "https://www.google.com/search?q=" + encodeURIComponent(query);
         }
 
-        function searchAndDownload() {
-            const fileUrl = prompt("ダウンロードしたいファイルのURLを入力してください:");
+        function createFileIcon(fileName, fileUrl) {
+            const desktop = document.getElementById("desktop");
+            const fileIcon = document.createElement("div");
+            fileIcon.className = "file-icon";
+            fileIcon.innerHTML = `
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="File">
+                <div>${fileName}</div>
+            `;
 
-            if (fileUrl) {
-                const fileName = fileUrl.split("/").pop();
-                downloadFile(fileUrl, fileName);
+            fileIcon.onclick = () => {
+                window.open(fileUrl, "_blank");
+            };
+
+            // ランダムな位置に配置
+            fileIcon.style.left = Math.random() * (window.innerWidth - 100) + "px";
+            fileIcon.style.top = Math.random() * (window.innerHeight - 150) + "px";
+
+            desktop.appendChild(fileIcon);
+        }
+
+        // ダウンロードイベントを監視
+        document.addEventListener("click", function(event) {
+            if (event.target.tagName === "A" && event.target.hasAttribute("download")) {
+                const fileName = event.target.getAttribute("download");
+                const fileUrl = event.target.href;
+
+                setTimeout(() => {
+                    createFileIcon(fileName, fileUrl);
+                }, 1000);
             }
-        }
-
-        function downloadFile(url, fileName) {
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.click();
-
-            // ダウンロード後にデスクトップにアイコンを表示
-            setTimeout(() => {
-                document.getElementById("fileIcon").style.display = "block";
-            }, 2000); // ダウンロード完了後にアイコン表示
-        }
+        });
     </script>
 
 </body>
