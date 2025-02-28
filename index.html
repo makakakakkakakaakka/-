@@ -219,6 +219,11 @@
     </div>
 
     <script>
+        // ページが読み込まれた際、最初に開くウィンドウを設定
+        window.onload = function() {
+            openWindow('browserWindow'); // 最初にブラウザウィンドウを開く
+        }
+
         function openWindow(id) {
             document.getElementById(id).style.display = "block";
         }
