@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garneace XP</title>
+    <title>Garneace OS</title>
     <style>
-        /* --- Windows XP風スタイル --- */
+        /* ガーネースOS独自のデザイン */
         body {
             margin: 0;
             overflow: hidden;
-            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
-            background-size: cover;
-            font-family: "MS UI Gothic", sans-serif;
+            background-color: #1d1f24; /* ダークな背景 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ddd;
         }
 
         /* タスクバー */
@@ -20,52 +20,61 @@
             bottom: 0;
             width: 100%;
             height: 40px;
-            background: linear-gradient(to bottom, #1c5da8, #104e8b);
+            background: #1b1b1b;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 10px;
             color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .start-button {
-            background: url('start-button.png') no-repeat center;
+            background-color: #333;
             width: 80px;
             height: 30px;
+            text-align: center;
+            line-height: 30px;
             cursor: pointer;
+            border-radius: 5px;
+            user-select: none;
         }
 
         /* ウィンドウデザイン */
         .window {
             width: 600px;
             height: 450px;
-            background: white;
+            background: #2b2f36;
+            border: 2px solid #444;
             position: absolute;
             top: 20%;
             left: 30%;
-            border: 2px solid black;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
             display: none;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
         .window-header {
-            background: black;
-            color: white;
+            background-color: #111;
+            color: #fff;
             padding: 10px;
             cursor: move;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .window-content {
-            padding: 10px;
+            padding: 20px;
             overflow: auto;
-            flex-grow: 1;
+            background-color: #222;
+            color: #ddd;
+            height: calc(100% - 40px); /* ヘッダー部分を除いた高さ */
         }
 
         .window-controls span {
-            margin-left: 10px;
             cursor: pointer;
+            padding: 0 5px;
         }
 
         .window-controls span:hover {
@@ -74,12 +83,17 @@
 
         .search-bar {
             width: 100%;
-            padding: 5px;
+            padding: 10px;
+            background-color: #444;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 5px;
         }
 
         .iframe-container {
             width: 100%;
-            height: 85%;
+            height: 80%;
         }
 
         .iframe-container iframe {
@@ -92,6 +106,9 @@
         textarea {
             width: 100%;
             height: 100%;
+            background-color: #444;
+            color: #ddd;
+            border: 1px solid #333;
             resize: none;
         }
 
@@ -105,18 +122,26 @@
         .calculator button {
             font-size: 18px;
             padding: 10px;
+            background-color: #333;
+            border: 1px solid #444;
+            color: #fff;
+            cursor: pointer;
         }
 
-        /* デスクトップアイコン */
         .desktop-icon {
             width: 80px;
             text-align: center;
             cursor: pointer;
             display: inline-block;
             margin: 10px;
+            color: #fff;
+            user-select: none;
         }
 
-        /* 仮想デスクトップに表示されるファイル */
+        .desktop-icon:hover {
+            color: #00ff00;
+        }
+
         .desktop-file {
             width: 80px;
             text-align: center;
@@ -124,11 +149,11 @@
             display: inline-block;
             margin: 10px;
             padding: 10px;
-            border: 1px solid black;
-            background-color: #f1f1f1;
+            border: 1px solid #00f;
+            background-color: #1a1a1a;
+            color: #fff;
         }
 
-        /* ダウンロードされたファイルの見た目 */
         .downloaded-file {
             width: 80px;
             text-align: center;
@@ -136,8 +161,9 @@
             display: inline-block;
             margin: 10px;
             padding: 10px;
-            border: 1px solid #00f;
-            background-color: #e0e0ff;
+            border: 1px solid #0f0;
+            background-color: #0f0;
+            color: #fff;
         }
 
     </style>
@@ -145,7 +171,7 @@
 <body>
 
     <!-- デスクトップアイコン -->
-    <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
+    <div class="desktop-icon" onclick="openWindow('browserWindow')">🌐 ブラウザ</div>
     <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
     <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
 
@@ -219,10 +245,11 @@
     </div>
 
     <script>
-        // ページが読み込まれた際、最初に開くウィンドウを設定
-        window.onload = function() {
-            openWindow('browserWindow'); // 最初にブラウザウィンドウを開く
-        }
+        // ページがクリックされてもウィンドウが消えないようにする
+        document.body.addEventListener('click', function(event) {
+            // ウィンドウ内のクリックで消えないようにする
+            if (event.target.closest('.window')) return;
+        });
 
         function openWindow(id) {
             document.getElementById(id).style.display = "block";
