@@ -3,29 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garneace XP</title>
+    <title>仮想OS</title>
     <style>
-        /* --- Windows XP風スタイル --- */
+        /* --- 全体のスタイル --- */
         body {
             margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: #d4d2d2;
             overflow: hidden;
-            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
-            background-size: cover;
-            font-family: "MS UI Gothic", sans-serif;
         }
 
-        /* タスクバー */
+        .desktop {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* --- デスクトップアイコン --- */
+        .desktop-icon {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            position: absolute;
+            top: 20%;
+            left: 5%;
+            margin: 10px;
+        }
+
+        .desktop-icon img {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* --- タスクバー --- */
         .taskbar {
             position: fixed;
             bottom: 0;
             width: 100%;
             height: 40px;
             background: linear-gradient(to bottom, #1c5da8, #104e8b);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10px;
             color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            align-items: center;
         }
 
         .start-button {
@@ -35,208 +59,220 @@
             cursor: pointer;
         }
 
-        /* ウィンドウデザイン */
+        /* --- ウィンドウのスタイル --- */
         .window {
-            width: 600px;
-            height: 450px;
+            width: 500px;
+            height: 400px;
             background: white;
-            position: absolute;
-            top: 20%;
-            left: 30%;
-            border: 2px solid black;
+            border: 2px solid #000;
             display: none;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .window-header {
-            background: black;
+            background: #333;
             color: white;
             padding: 10px;
             cursor: move;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .window-content {
             padding: 10px;
             overflow: auto;
-            flex-grow: 1;
+            height: 320px;
         }
 
         .window-controls span {
-            margin-left: 10px;
             cursor: pointer;
+            margin-left: 10px;
         }
 
-        .window-controls span:hover {
-            color: red;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 5px;
-        }
-
-        .iframe-container {
-            width: 100%;
-            height: 85%;
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* メモ帳と電卓のデザイン */
+        /* --- メモ帳 --- */
         textarea {
             width: 100%;
             height: 100%;
             resize: none;
+            padding: 10px;
         }
 
+        /* --- 電卓のスタイル --- */
         .calculator {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 5px;
-            padding: 10px;
         }
 
         .calculator button {
             font-size: 18px;
             padding: 10px;
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+            cursor: pointer;
         }
 
-        /* デスクトップアイコン */
-        .desktop-icon {
-            width: 80px;
-            text-align: center;
+        .calculator button:hover {
+            background-color: #ddd;
+        }
+
+        /* --- メモ帳と電卓のボタン --- */
+        .save-btn {
+            margin-top: 10px;
+            padding: 10px;
             cursor: pointer;
-            display: inline-block;
-            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        /* --- 検索バー --- */
+        .search-bar {
+            width: 100%;
+            padding: 5px;
+        }
+
+        /* --- iframe コンテナ --- */
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
 
+<div class="desktop">
     <!-- デスクトップアイコン -->
-    <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
-    <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
-    <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
-    <div class="desktop-icon" onclick="downloadFile()">📄 ダウンロードファイル</div>
-
-    <!-- タスクバー -->
-    <div class="taskbar">
-        <div class="start-button" onclick="openWindow('startMenu')">⚙ スタート</div>
+    <div class="desktop-icon" style="top: 20%; left: 5%;" onclick="openWindow('browserWindow')">
+        <img src="https://img.icons8.com/ios/452/chrome.png" alt="Browser">
+        <p>ブラウザ</p>
     </div>
-
-    <!-- ブラウザウィンドウ -->
-    <div id="browserWindow" class="window">
-        <div class="window-header">
-            <span>ブラウザ</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('browserWindow')">✖</span>
-            </div>
-        </div>
-        <div class="window-content">
-            <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
-            <div class="iframe-container">
-                <iframe id="browserFrame" src="https://www.bing.com"></iframe>
-            </div>
-        </div>
+    <div class="desktop-icon" style="top: 40%; left: 5%;" onclick="openWindow('notepadWindow')">
+        <img src="https://img.icons8.com/ios/452/notes.png" alt="Notepad">
+        <p>メモ帳</p>
     </div>
+    <div class="desktop-icon" style="top: 60%; left: 5%;" onclick="openWindow('calculatorWindow')">
+        <img src="https://img.icons8.com/ios/452/calculator.png" alt="Calculator">
+        <p>電卓</p>
+    </div>
+    <div class="desktop-icon" style="top: 80%; left: 5%;" onclick="downloadFile()">
+        <img src="https://img.icons8.com/ios/452/download.png" alt="Download">
+        <p>ダウンロード</p>
+    </div>
+</div>
 
-    <!-- メモ帳 -->
-    <div id="notepadWindow" class="window">
-        <div class="window-header">
-            <span>メモ帳</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('notepadWindow')">✖</span>
-            </div>
-        </div>
-        <div class="window-content">
-            <textarea id="notepad"></textarea>
-            <button onclick="saveText()">保存</button>
+<!-- タスクバー -->
+<div class="taskbar">
+    <div class="start-button" onclick="openStartMenu()">⚙ スタート</div>
+</div>
+
+<!-- ブラウザウィンドウ -->
+<div id="browserWindow" class="window">
+    <div class="window-header">
+        <span>ブラウザ</span>
+        <div class="window-controls">
+            <span onclick="closeWindow('browserWindow')">✖</span>
         </div>
     </div>
+    <div class="window-content">
+        <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
+        <iframe id="browserFrame" src="https://www.google.com"></iframe>
+    </div>
+</div>
 
-    <!-- 電卓 -->
-    <div id="calculatorWindow" class="window">
-        <div class="window-header">
-            <span>電卓</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('calculatorWindow')">✖</span>
-            </div>
-        </div>
-        <div class="window-content">
-            <input type="text" id="calcDisplay" readonly>
-            <div class="calculator">
-                <button onclick="calcInput('7')">7</button>
-                <button onclick="calcInput('8')">8</button>
-                <button onclick="calcInput('9')">9</button>
-                <button onclick="calcInput('/')">÷</button>
-                <button onclick="calcInput('4')">4</button>
-                <button onclick="calcInput('5')">5</button>
-                <button onclick="calcInput('6')">6</button>
-                <button onclick="calcInput('*')">×</button>
-                <button onclick="calcInput('1')">1</button>
-                <button onclick="calcInput('2')">2</button>
-                <button onclick="calcInput('3')">3</button>
-                <button onclick="calcInput('-')">−</button>
-                <button onclick="calcInput('0')">0</button>
-                <button onclick="calcInput('.')">.</button>
-                <button onclick="calcCalculate()">=</button>
-                <button onclick="calcInput('+')">+</button>
-            </div>
+<!-- メモ帳ウィンドウ -->
+<div id="notepadWindow" class="window">
+    <div class="window-header">
+        <span>メモ帳</span>
+        <div class="window-controls">
+            <span onclick="closeWindow('notepadWindow')">✖</span>
         </div>
     </div>
+    <div class="window-content">
+        <textarea id="notepad"></textarea>
+        <button class="save-btn" onclick="saveText()">保存</button>
+    </div>
+</div>
 
-    <script>
-        function openWindow(id) {
-            document.getElementById(id).style.display = "block";
-        }
+<!-- 電卓ウィンドウ -->
+<div id="calculatorWindow" class="window">
+    <div class="window-header">
+        <span>電卓</span>
+        <div class="window-controls">
+            <span onclick="closeWindow('calculatorWindow')">✖</span>
+        </div>
+    </div>
+    <div class="window-content">
+        <input type="text" id="calcDisplay" readonly>
+        <div class="calculator">
+            <button onclick="calcInput('7')">7</button>
+            <button onclick="calcInput('8')">8</button>
+            <button onclick="calcInput('9')">9</button>
+            <button onclick="calcInput('/')">÷</button>
+            <button onclick="calcInput('4')">4</button>
+            <button onclick="calcInput('5')">5</button>
+            <button onclick="calcInput('6')">6</button>
+            <button onclick="calcInput('*')">×</button>
+            <button onclick="calcInput('1')">1</button>
+            <button onclick="calcInput('2')">2</button>
+            <button onclick="calcInput('3')">3</button>
+            <button onclick="calcInput('-')">−</button>
+            <button onclick="calcInput('0')">0</button>
+            <button onclick="calcInput('.')">.</button>
+            <button onclick="calcCalculate()">=</button>
+            <button onclick="calcInput('+')">+</button>
+        </div>
+    </div>
+</div>
 
-        function closeWindow(id) {
-            document.getElementById(id).style.display = "none";
-        }
+<script>
+    function openWindow(id) {
+        document.getElementById(id).style.display = "block";
+    }
 
-        function searchGoogle() {
-            const query = document.getElementById("searchInput").value;
-            document.getElementById("browserFrame").src = "https://www.bing.com/search?q=" + encodeURIComponent(query);
-        }
+    function closeWindow(id) {
+        document.getElementById(id).style.display = "none";
+    }
 
-        function saveText() {
-            const text = document.getElementById("notepad").value;
-            localStorage.setItem("notepadData", text);
-        }
+    function searchGoogle() {
+        const query = document.getElementById("searchInput").value;
+        document.getElementById("browserFrame").src = "https://www.google.com/search?q=" + encodeURIComponent(query);
+    }
 
-        function calcInput(val) {
-            document.getElementById("calcDisplay").value += val;
-        }
+    function saveText() {
+        const text = document.getElementById("notepad").value;
+        localStorage.setItem("notepadData", text);
+    }
 
-        function calcCalculate() {
-            document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
-        }
+    function calcInput(val) {
+        document.getElementById("calcDisplay").value += val;
+    }
 
-        // ダウンロード処理と仮想デスクトップにファイル表示
-        function downloadFile() {
-            const fileName = "sampleFile.txt";
-            const fileContent = "これは仮想的なダウンロードファイルです。";
-            const file = new Blob([fileContent], { type: "text/plain" });
-            const fileURL = URL.createObjectURL(file);
+    function calcCalculate() {
+        document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
+    }
 
-            // デスクトップにアイコンを追加
-            const fileIcon = document.createElement('div');
-            fileIcon.classList.add('desktop-icon');
-            fileIcon.innerText = fileName;
-            fileIcon.onclick = function() {
-                window.open(fileURL, '_blank');
-            };
-            
-            // 仮想デスクトップに追加
-            document.body.appendChild(fileIcon);
-        }
-    </script>
+    function downloadFile() {
+        const fileName = "sampleFile.txt";
+        const fileContent = "これは仮想的なダウンロードファイルです。";
+        const file = new Blob([fileContent], { type: "text/plain" });
+        const fileURL = URL.createObjectURL(file);
+
+        const fileIcon = document.createElement('div');
+        fileIcon.classList.add('desktop-icon');
+        fileIcon.innerText = fileName;
+        fileIcon.onclick = function() {
+            window.open(fileURL, '_blank');
+        };
+        
+        document.body.appendChild(fileIcon);
+    }
+</script>
 
 </body>
 </html>
