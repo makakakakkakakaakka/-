@@ -115,6 +115,31 @@
             display: inline-block;
             margin: 10px;
         }
+
+        /* 仮想デスクトップに表示されるファイル */
+        .desktop-file {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+            background-color: #f1f1f1;
+        }
+
+        /* ダウンロードされたファイルの見た目 */
+        .downloaded-file {
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #00f;
+            background-color: #e0e0ff;
+        }
+
     </style>
 </head>
 <body>
@@ -123,6 +148,9 @@
     <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
     <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
     <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
+
+    <!-- ダウンロードされたファイルアイコン（仮想デスクトップ上） -->
+    <div id="downloadedFile" class="desktop-file" style="display: none;" onclick="openFile('downloadedFile')">📄 ダウンロード済み</div>
 
     <!-- タスクバー -->
     <div class="taskbar">
@@ -216,6 +244,21 @@
         function calcCalculate() {
             document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
         }
+
+        // 仮想デスクトップにファイルをダウンロード表示
+        function downloadFile() {
+            document.getElementById('downloadedFile').style.display = 'inline-block'; // ダウンロード済みファイルアイコンを表示
+        }
+
+        // ダウンロード済みファイルを開く
+        function openFile(id) {
+            alert('ファイルが開かれました: ' + id);
+        }
+
+        // ダウンロードボタンを押したとき
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(downloadFile, 2000); // 2秒後にダウンロード表示
+        });
     </script>
 
 </body>
