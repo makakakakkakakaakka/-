@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garneace XP</title>
     <style>
+        /* --- Windows XP風スタイル --- */
         body {
             margin: 0;
-            padding: 0;
-            font-family: "MS UI Gothic", sans-serif;
+            overflow: hidden;
             background: url('https://source.unsplash.com/random/1920x1080?nature') no-repeat center center fixed;
             background-size: cover;
+            font-family: "MS UI Gothic", sans-serif;
         }
 
-        /* タスクバーのデザイン */
+        /* タスクバー */
         .taskbar {
             position: fixed;
             bottom: 0;
@@ -34,7 +35,7 @@
             cursor: pointer;
         }
 
-        /* ウィンドウのデザイン */
+        /* ウィンドウデザイン */
         .window {
             width: 600px;
             height: 450px;
@@ -45,8 +46,6 @@
             border: 2px solid black;
             display: none;
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-            padding: 10px;
         }
 
         .window-header {
@@ -61,6 +60,7 @@
         .window-content {
             padding: 10px;
             overflow: auto;
+            flex-grow: 1;
         }
 
         .window-controls span {
@@ -72,13 +72,11 @@
             color: red;
         }
 
-        /* サーチバー */
         .search-bar {
             width: 100%;
             padding: 5px;
         }
 
-        /* iframeコンテナ */
         .iframe-container {
             width: 100%;
             height: 85%;
@@ -90,14 +88,13 @@
             border: none;
         }
 
-        /* メモ帳のデザイン */
+        /* メモ帳と電卓のデザイン */
         textarea {
             width: 100%;
             height: 100%;
             resize: none;
         }
 
-        /* 電卓 */
         .calculator {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -126,26 +123,11 @@
     <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
     <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
     <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
-    <div class="desktop-icon" onclick="downloadFile()">📄 ダウンロード</div>
+    <div class="desktop-icon" onclick="downloadFile()">📄 ダウンロードファイル</div>
 
     <!-- タスクバー -->
     <div class="taskbar">
         <div class="start-button" onclick="openWindow('startMenu')">⚙ スタート</div>
-    </div>
-
-    <!-- スタートメニュー -->
-    <div id="startMenu" class="window" style="top: 100px; left: 10px; width: 200px;">
-        <div class="window-header">
-            <span>スタートメニュー</span>
-            <div class="window-controls">
-                <span onclick="closeWindow('startMenu')">✖</span>
-            </div>
-        </div>
-        <div class="window-content">
-            <div class="desktop-icon" onclick="openWindow('browserWindow')">🌍 ブラウザ</div>
-            <div class="desktop-icon" onclick="openWindow('notepadWindow')">📝 メモ帳</div>
-            <div class="desktop-icon" onclick="openWindow('calculatorWindow')">🧮 電卓</div>
-        </div>
     </div>
 
     <!-- ブラウザウィンドウ -->
@@ -236,6 +218,7 @@
             document.getElementById("calcDisplay").value = eval(document.getElementById("calcDisplay").value);
         }
 
+        // ダウンロード処理と仮想デスクトップにファイル表示
         function downloadFile() {
             const fileName = "sampleFile.txt";
             const fileContent = "これは仮想的なダウンロードファイルです。";
