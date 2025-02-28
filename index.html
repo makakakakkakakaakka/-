@@ -168,7 +168,7 @@
         <div class="window-content">
             <input class="search-bar" id="searchInput" type="text" placeholder="検索..." onkeydown="if(event.key==='Enter') searchGoogle()">
             <div class="iframe-container">
-                <iframe id="browserFrame" src="https://www.bing.com"></iframe>
+                <iframe id="browserFrame" src="https://www.google.com"></iframe>
             </div>
         </div>
     </div>
@@ -229,7 +229,7 @@
 
         function searchGoogle() {
             const query = document.getElementById("searchInput").value;
-            document.getElementById("browserFrame").src = "https://www.bing.com/search?q=" + encodeURIComponent(query);
+            document.getElementById("browserFrame").src = "https://www.google.com/search?q=" + encodeURIComponent(query);
         }
 
         function saveText() {
