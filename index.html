@@ -32,7 +32,10 @@
                 <button class="close-btn" onclick="closeWindow('fileExplorer')">×</button>
             </div>
             <div class="window-content">
-                <p>ここにファイルが表示されます。</p>
+                <p>アップロードされたファイル一覧:</p>
+                <ul id="fileList"></ul>
+                <input type="file" id="fileInput" onchange="uploadFile(event)">
+                <button onclick="downloadFile()">ダウンロード可能なファイル</button>
             </div>
         </div>
 
