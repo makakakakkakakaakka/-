@@ -15,7 +15,7 @@ let tabs = [];
 let historyStack = [];
 let historyIndex = -1;
 
-function createNewTab(url = "https://example.com") {
+function createNewTab(url = "https://www.google.com") {  // デフォルトURLをGoogleに変更
     let tabId = tabs.length;
     tabs.push(url);
 
