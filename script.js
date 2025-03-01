@@ -1,82 +1,55 @@
-// 仮想OS内で開かれているアプリを管理する
-function openApp(app) {
-    if (app === 'browser') {
-        document.getElementById('browserWindow').style.display = 'block';
-    } else if (app === 'fileExplorer') {
-        document.getElementById('fileExplorerWindow').style.display = 'block';
-    } else if (app === 'calculator') {
-        document.getElementById('calculatorWindow').style.display = 'block';
+document.addEventListener("DOMContentLoaded", function () {
+    // 🕰️ 時計の更新
+    function updateClock() {
+        document.getElementById("clock").innerText = new Date().toLocaleTimeString();
     }
-}
+    setInterval(updateClock, 1000);
+    updateClock();
 
-// アプリを閉じる関数
-function closeWindow(app) {
-    if (app === 'browser') {
-        document.getElementById('browserWindow').style.display = 'none';
-    } else if (app === 'fileExplorer') {
-        document.getElementById('fileExplorerWindow').style.display = 'none';
-    } else if (app === 'calculator') {
-        document.getElementById('calculatorWindow').style.display = 'none';
-    }
-}
-
-// ウェブ内でファイルをダウンロードする関数
-function downloadFile() {
-    const url = "https://www.example.com/sample.txt"; // ダウンロードするファイルのURL
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = "sample.txt";  // ダウンロードするファイル名
-    link.click(); // ダウンロード開始
-}
-
-// 電卓機能
-let calcDisplay = '';
-function appendToDisplay(value) {
-    calcDisplay += value;
-    document.getElementById('calculatorDisplay').value = calcDisplay;
-}
-
-function calculate() {
-    try {
-        calcDisplay = eval(calcDisplay).toString();
-        document.getElementById('calculatorDisplay').value = calcDisplay;
-    } catch (e) {
-        document.getElementById('calculatorDisplay').value = 'エラー';
-    }
-}
-
-// ファイル管理: アップロードされたファイルを表示する
-let uploadedFiles = [];
-
-function uploadFile(event) {
-    const file = event.target.files[0];
-    if (file) {
-        uploadedFiles.push(file);
-        updateFileList();
-    }
-}
-
-// アップロードされたファイルのリストを表示
-function updateFileList() {
-    const fileListElement = document.getElementById('fileList');
-    fileListElement.innerHTML = ''; // 一度リストをクリア
-    uploadedFiles.forEach((file, index) => {
-        const li = document.createElement('li');
-        li.textContent = file.name + ' (' + file.size + ' bytes)';
-        const downloadButton = document.createElement('button');
-        downloadButton.textContent = 'ダウンロード';
-        downloadButton.onclick = () => downloadUploadedFile(index);
-        li.appendChild(downloadButton);
-        fileListElement.appendChild(li);
+    // 📜 スタートメニューの開閉
+    document.getElementById("start-button").addEventListener("click", function () {
+        let menu = document.getElementById("start-menu");
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
     });
+});
+
+// 🖥️ アプリを開く関数
+function openApp(appName) {
+    let appContainer = document.getElementById("app-container");
+
+    let windowDiv = document.createElement("div");
+    windowDiv.className = "window";
+    windowDiv.innerHTML = `
+        <div class="window-header">
+            <span>${appName}</span>
+            <button onclick="this.parentElement.parentElement.remove()">❌</button>
+        </div>
+        <div class="window-content">
+            ${appName === "notepad" ? '<textarea style="width:100%; height:100%;"></textarea>' : ""}
+            ${appName === "fileExplorer" ? '<input type="file"><button onclick="downloadFile()">ダウンロード</button>' : ""}
+            ${appName === "calculator" ? '<input type="text" id="calc-input"><button onclick="calculate()">=</button>' : ""}
+        </div>
+    `;
+
+    appContainer.appendChild(windowDiv);
 }
 
-// アップロードされたファイルをダウンロード
-function downloadUploadedFile(index) {
-    const file = uploadedFiles[index];
-    const url = URL.createObjectURL(file);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = file.name;
+// 📂 仮想ダウンロード
+function downloadFile() {
+    let link = document.createElement("a");
+    link.href = "data:text/plain;charset=utf-8,仮想ファイル";
+    link.download = "file.txt";
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+}
+
+// 🔢 電卓機能
+function calculate() {
+    let input = document.getElementById("calc-input");
+    try {
+        input.value = eval(input.value);
+    } catch {
+        input.value = "エラー";
+    }
 }
