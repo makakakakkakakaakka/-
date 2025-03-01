@@ -4,36 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>仮想OS</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 仮想OSの全体デザイン */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #4CAF50;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #os-container {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        #desktop {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+            background-color: #333;
+            position: relative;
+        }
+
+        .window {
+            width: 400px;
+            height: 300px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .window-controls {
+            display: flex;
+        }
+
+        .window-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .window-content {
+            padding: 20px;
+            overflow: auto;
+            flex-grow: 1;
+        }
+
+        /* スタートメニュー */
+        #start-menu {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #start-button {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* ダウンロードリスト */
+        #download-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .download-item {
+            padding: 5px;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+        }
+
+        /* 仮想ターミナル */
+        .terminal {
+            font-family: monospace;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .terminal input {
+            background-color: #333;
+            color: white;
+            border: none;
+            width: 100%;
+        }
+
+    </style>
 </head>
 <body>
-    <div id="desktop">
-        <button id="open-browser">📡 仮想ブラウザを開く</button>
-        
-        <!-- 仮想ブラウザのウィンドウ -->
-        <div id="browser-window" class="window">
-            <div class="window-header">
-                <span>🖥 仮想ブラウザ</span>
-                <button id="minimize-btn">🗕</button>
-                <button id="close-btn">❌</button>
-            </div>
-            <div class="browser-controls">
-                <button id="back-btn">⬅️</button>
-                <button id="forward-btn">➡️</button>
-                <input type="text" id="url-input" placeholder="URLを入力してEnter">
-                <button id="new-tab-btn">📑 新しいタブ</button>
-            </div>
-            <div id="tabs-container"></div>
-            <iframe id="browser-frame" src="https://example.com"></iframe>
+    <div id="os-container">
+        <!-- スタートボタン -->
+        <button id="start-button">スタート</button>
+        <div id="start-menu">
+            <button id="open-terminal">仮想ターミナル</button>
+            <button id="open-file-explorer">ファイルエクスプローラー</button>
+            <button id="open-downloads">ダウンロード</button>
         </div>
-        
-        <!-- 仮想ダウンロードエリア -->
-        <div id="downloads">
-            <h3>📂 ダウンロードファイル</h3>
-            <ul id="download-list"></ul>
-        </div>
+        <!-- 仮想OSデスクトップ -->
+        <div id="desktop"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // スタートメニューの表示・非表示
+        document.getElementById("start-button").addEventListener("click", function() {
+            const startMenu = document.getElementById("start-menu");
+            startMenu.style.display = startMenu.style.display === "none" ? "block" : "none";
+        });
+
+        // 新しいウィンドウを開く
+        function createWindow(title, content) {
+            const windowElement = document.createElement("div");
+            windowElement.classList.add("window");
+
+            const windowHeader = document.createElement("div");
+            windowHeader.classList.add("window-header");
+            windowHeader.innerHTML = `<span>${title}</span>
+                                      <div class="window-controls">
+                                          <button onclick="closeWindow(event)">×</button>
+                                          <button onclick="minimizeWindow(event)">_</button>
+                                      </div>`;
+
+            const windowContent = document.createElement("div");
+            windowContent.classList.add("window-content");
+            windowContent.innerHTML = content;
+
+            windowElement.appendChild(windowHeader);
+            windowElement.appendChild(windowContent);
+            document.getElementById("desktop").appendChild(windowElement);
+        }
+
+        // 仮想ターミナルを開く
+        document.getElementById("open-terminal").addEventListener("click", function() {
+            createWindow("仮想ターミナル", '<div class="terminal"><input type="text" placeholder="コマンドを入力..." /></div>');
+        });
+
+        // ファイルエクスプローラーを開く
+        document.getElementById("open-file-explorer").addEventListener("click", function() {
+            createWindow("ファイルエクスプローラー", '<ul><li>ファイル1.txt</li><li>ファイル2.jpg</li><li>ファイル3.docx</li></ul>');
+        });
+
+        // ダウンロードを表示
+        document.getElementById("open-downloads").addEventListener("click", function() {
+            createWindow("ダウンロード", `
+                <ul id="download-list">
+                    <li class="download-item">ファイル1.zip</li>
+                    <li class="download-item">画像.jpg</li>
+                    <li class="download-item">文書.pdf</li>
+                </ul>
+            `);
+        });
+
+        // ウィンドウを閉じる
+        function closeWindow(event) {
+            const window = event.target.closest(".window");
+            window.remove();
+        }
+
+        // ウィンドウを最小化する
+        function minimizeWindow(event) {
+            const window = event.target.closest(".window");
+            window.style.display = "none";
+        }
+
+        // ウィンドウを戻す（表示）
+        function restoreWindow(event) {
+            const window = event.target.closest(".window");
+            window.style.display = "block";
+        }
+    </script>
 </body>
 </html>
