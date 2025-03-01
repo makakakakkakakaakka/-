@@ -3,60 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>仮想OS</title>
+    <title>gowindows - 仮想OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- 🖥️ デスクトップ -->
     <div id="desktop">
-        <div id="taskbar">
-            <button onclick="openApp('browser')">ブラウザ</button>
-            <button onclick="openApp('fileExplorer')">ファイルエクスプローラ</button>
-            <button onclick="openApp('calculator')">電卓</button>
+        <div class="desktop-icon" ondblclick="openApp('notepad')">
+            📝<br>メモ帳
         </div>
-
-        <!-- 仮想OSのウィンドウ -->
-        <div id="browserWindow" class="window" style="display: none;">
-            <div class="window-header">
-                <span>ブラウザ</span>
-                <button class="close-btn" onclick="closeWindow('browser')">×</button>
-            </div>
-            <div class="window-content">
-                <iframe id="browserFrame" src="https://www.google.com" width="100%" height="400px"></iframe>
-                <button onclick="downloadFile()">ウェブからファイルをダウンロード</button>
-            </div>
+        <div class="desktop-icon" ondblclick="openApp('fileExplorer')">
+            📁<br>ファイル管理
         </div>
-
-        <div id="fileExplorerWindow" class="window" style="display: none;">
-            <div class="window-header">
-                <span>ファイルエクスプローラ</span>
-                <button class="close-btn" onclick="closeWindow('fileExplorer')">×</button>
-            </div>
-            <div class="window-content">
-                <p>アップロードされたファイル一覧:</p>
-                <ul id="fileList"></ul>
-                <input type="file" id="fileInput" onchange="uploadFile(event)">
-                <button onclick="downloadFile()">ダウンロード可能なファイル</button>
-            </div>
-        </div>
-
-        <div id="calculatorWindow" class="window" style="display: none;">
-            <div class="window-header">
-                <span>電卓</span>
-                <button class="close-btn" onclick="closeWindow('calculator')">×</button>
-            </div>
-            <div class="window-content">
-                <input type="text" id="calculatorDisplay" disabled>
-                <br>
-                <button onclick="appendToDisplay('1')">1</button>
-                <button onclick="appendToDisplay('2')">2</button>
-                <button onclick="appendToDisplay('3')">3</button>
-                <br>
-                <button onclick="appendToDisplay('+')">+</button>
-                <button onclick="appendToDisplay('-')">-</button>
-                <button onclick="calculate()">=</button>
-            </div>
+        <div class="desktop-icon" ondblclick="openApp('calculator')">
+            🔢<br>電卓
         </div>
     </div>
+
+    <!-- 📌 タスクバー -->
+    <div id="taskbar">
+        <button id="start-button">⚙️ Start</button>
+        <div id="open-apps"></div>
+        <div id="clock"></div>
+    </div>
+
+    <!-- 📜 スタートメニュー -->
+    <div id="start-menu">
+        <button onclick="openApp('notepad')">📝 メモ帳</button>
+        <button onclick="openApp('fileExplorer')">📁 ファイル管理</button>
+        <button onclick="openApp('calculator')">🔢 電卓</button>
+    </div>
+
+    <!-- 🪟 アプリウィンドウコンテナ -->
+    <div id="app-container"></div>
 
     <script src="script.js"></script>
 </body>
