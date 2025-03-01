@@ -3,40 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gowindows - 仮想OS</title>
+    <title>仮想OS</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- 🖥️ デスクトップ -->
     <div id="desktop">
-        <div class="desktop-icon" ondblclick="openApp('notepad')">
-            📝<br>メモ帳
+        <button id="open-browser">📡 仮想ブラウザを開く</button>
+        
+        <!-- 仮想ブラウザのウィンドウ -->
+        <div id="browser-window" class="window">
+            <div class="window-header">
+                <span>🖥 仮想ブラウザ</span>
+                <button id="minimize-btn">🗕</button>
+                <button id="close-btn">❌</button>
+            </div>
+            <div class="browser-controls">
+                <button id="back-btn">⬅️</button>
+                <button id="forward-btn">➡️</button>
+                <input type="text" id="url-input" placeholder="URLを入力してEnter">
+                <button id="new-tab-btn">📑 新しいタブ</button>
+            </div>
+            <div id="tabs-container"></div>
+            <iframe id="browser-frame" src="https://example.com"></iframe>
         </div>
-        <div class="desktop-icon" ondblclick="openApp('fileExplorer')">
-            📁<br>ファイル管理
-        </div>
-        <div class="desktop-icon" ondblclick="openApp('calculator')">
-            🔢<br>電卓
+        
+        <!-- 仮想ダウンロードエリア -->
+        <div id="downloads">
+            <h3>📂 ダウンロードファイル</h3>
+            <ul id="download-list"></ul>
         </div>
     </div>
-
-    <!-- 📌 タスクバー -->
-    <div id="taskbar">
-        <button id="start-button">⚙️ Start</button>
-        <div id="open-apps"></div>
-        <div id="clock"></div>
-    </div>
-
-    <!-- 📜 スタートメニュー -->
-    <div id="start-menu">
-        <button onclick="openApp('notepad')">📝 メモ帳</button>
-        <button onclick="openApp('fileExplorer')">📁 ファイル管理</button>
-        <button onclick="openApp('calculator')">🔢 電卓</button>
-    </div>
-
-    <!-- 🪟 アプリウィンドウコンテナ -->
-    <div id="app-container"></div>
 
     <script src="script.js"></script>
 </body>
