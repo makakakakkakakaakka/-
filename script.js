@@ -12,11 +12,13 @@ document.getElementById("minimize-btn").addEventListener("click", function() {
 
 let currentTabIndex = 0;
 let tabs = [];
+let historyStack = [];
+let historyIndex = -1;
 
 function createNewTab(url = "https://example.com") {
     let tabId = tabs.length;
     tabs.push(url);
-    
+
     let tab = document.createElement("div");
     tab.className = "tab";
     tab.innerText = "タブ " + (tabId + 1);
@@ -32,10 +34,22 @@ function createNewTab(url = "https://example.com") {
 function switchTab(index) {
     currentTabIndex = index;
     document.getElementById("browser-frame").src = tabs[index];
-    
+
+    // 履歴管理を更新
+    updateHistory(tabs[index]);
+
     let tabElements = document.querySelectorAll(".tab");
     tabElements.forEach(tab => tab.classList.remove("active"));
     tabElements[index].classList.add("active");
+}
+
+function updateHistory(url) {
+    // 新しいページに遷移した際、履歴に追加
+    if (historyStack[historyIndex] !== url) {
+        historyStack = historyStack.slice(0, historyIndex + 1);  // 未来の履歴は消去
+        historyStack.push(url);
+        historyIndex++;
+    }
 }
 
 document.getElementById("new-tab-btn").addEventListener("click", function() {
@@ -50,13 +64,13 @@ document.getElementById("url-input").addEventListener("keypress", function(event
         }
         tabs[currentTabIndex] = url;
         document.getElementById("browser-frame").src = url;
+
+        // 履歴更新
+        updateHistory(url);
     }
 });
 
-// 履歴管理
-let historyStack = [];
-let historyIndex = -1;
-
+// 履歴管理（戻る・進む）
 document.getElementById("back-btn").addEventListener("click", function() {
     if (historyIndex > 0) {
         historyIndex--;
