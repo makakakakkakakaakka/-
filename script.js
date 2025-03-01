@@ -1,65 +1,82 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+// 仮想OS内で開かれているアプリを管理する
+function openApp(app) {
+    if (app === 'browser') {
+        document.getElementById('browserWindow').style.display = 'block';
+    } else if (app === 'fileExplorer') {
+        document.getElementById('fileExplorerWindow').style.display = 'block';
+    } else if (app === 'calculator') {
+        document.getElementById('calculatorWindow').style.display = 'block';
+    }
 }
 
-#desktop {
-    position: relative;
-    height: 100vh;
+// アプリを閉じる関数
+function closeWindow(app) {
+    if (app === 'browser') {
+        document.getElementById('browserWindow').style.display = 'none';
+    } else if (app === 'fileExplorer') {
+        document.getElementById('fileExplorerWindow').style.display = 'none';
+    } else if (app === 'calculator') {
+        document.getElementById('calculatorWindow').style.display = 'none';
+    }
 }
 
-#taskbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-around;
+// ウェブ内でファイルをダウンロードする関数
+function downloadFile() {
+    const url = "https://www.example.com/sample.txt"; // ダウンロードするファイルのURL
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "sample.txt";  // ダウンロードするファイル名
+    link.click(); // ダウンロード開始
 }
 
-button {
-    background-color: #444;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
+// 電卓機能
+let calcDisplay = '';
+function appendToDisplay(value) {
+    calcDisplay += value;
+    document.getElementById('calculatorDisplay').value = calcDisplay;
 }
 
-button:hover {
-    background-color: #555;
+function calculate() {
+    try {
+        calcDisplay = eval(calcDisplay).toString();
+        document.getElementById('calculatorDisplay').value = calcDisplay;
+    } catch (e) {
+        document.getElementById('calculatorDisplay').value = 'エラー';
+    }
 }
 
-.window {
-    position: absolute;
-    width: 400px;
-    height: 300px;
-    background-color: white;
-    border: 2px solid #333;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+// ファイル管理: アップロードされたファイルを表示する
+let uploadedFiles = [];
+
+function uploadFile(event) {
+    const file = event.target.files[0];
+    if (file) {
+        uploadedFiles.push(file);
+        updateFileList();
+    }
 }
 
-.window-header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+// アップロードされたファイルのリストを表示
+function updateFileList() {
+    const fileListElement = document.getElementById('fileList');
+    fileListElement.innerHTML = ''; // 一度リストをクリア
+    uploadedFiles.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.textContent = file.name + ' (' + file.size + ' bytes)';
+        const downloadButton = document.createElement('button');
+        downloadButton.textContent = 'ダウンロード';
+        downloadButton.onclick = () => downloadUploadedFile(index);
+        li.appendChild(downloadButton);
+        fileListElement.appendChild(li);
+    });
 }
 
-.close-btn {
-    background: none;
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.window-content {
-    padding: 10px;
-    overflow: auto;
+// アップロードされたファイルをダウンロード
+function downloadUploadedFile(index) {
+    const file = uploadedFiles[index];
+    const url = URL.createObjectURL(file);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = file.name;
+    link.click();
 }
