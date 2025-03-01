@@ -1,55 +1,79 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // 🕰️ 時計の更新
-    function updateClock() {
-        document.getElementById("clock").innerText = new Date().toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // 📜 スタートメニューの開閉
-    document.getElementById("start-button").addEventListener("click", function () {
-        let menu = document.getElementById("start-menu");
-        menu.style.display = menu.style.display === "block" ? "none" : "block";
-    });
+document.getElementById("open-browser").addEventListener("click", function() {
+    document.getElementById("browser-window").style.display = "block";
 });
 
-// 🖥️ アプリを開く関数
-function openApp(appName) {
-    let appContainer = document.getElementById("app-container");
+document.getElementById("close-btn").addEventListener("click", function() {
+    document.getElementById("browser-window").style.display = "none";
+});
 
-    let windowDiv = document.createElement("div");
-    windowDiv.className = "window";
-    windowDiv.innerHTML = `
-        <div class="window-header">
-            <span>${appName}</span>
-            <button onclick="this.parentElement.parentElement.remove()">❌</button>
-        </div>
-        <div class="window-content">
-            ${appName === "notepad" ? '<textarea style="width:100%; height:100%;"></textarea>' : ""}
-            ${appName === "fileExplorer" ? '<input type="file"><button onclick="downloadFile()">ダウンロード</button>' : ""}
-            ${appName === "calculator" ? '<input type="text" id="calc-input"><button onclick="calculate()">=</button>' : ""}
-        </div>
-    `;
+document.getElementById("minimize-btn").addEventListener("click", function() {
+    document.getElementById("browser-window").style.height = "30px";
+});
 
-    appContainer.appendChild(windowDiv);
+let currentTabIndex = 0;
+let tabs = [];
+
+function createNewTab(url = "https://example.com") {
+    let tabId = tabs.length;
+    tabs.push(url);
+    
+    let tab = document.createElement("div");
+    tab.className = "tab";
+    tab.innerText = "タブ " + (tabId + 1);
+    tab.dataset.index = tabId;
+    tab.addEventListener("click", function() {
+        switchTab(tabId);
+    });
+
+    document.getElementById("tabs-container").appendChild(tab);
+    switchTab(tabId);
 }
 
-// 📂 仮想ダウンロード
-function downloadFile() {
-    let link = document.createElement("a");
-    link.href = "data:text/plain;charset=utf-8,仮想ファイル";
-    link.download = "file.txt";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+function switchTab(index) {
+    currentTabIndex = index;
+    document.getElementById("browser-frame").src = tabs[index];
+    
+    let tabElements = document.querySelectorAll(".tab");
+    tabElements.forEach(tab => tab.classList.remove("active"));
+    tabElements[index].classList.add("active");
 }
 
-// 🔢 電卓機能
-function calculate() {
-    let input = document.getElementById("calc-input");
-    try {
-        input.value = eval(input.value);
-    } catch {
-        input.value = "エラー";
+document.getElementById("new-tab-btn").addEventListener("click", function() {
+    createNewTab();
+});
+
+document.getElementById("url-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        let url = this.value;
+        if (!url.startsWith("http")) {
+            url = "https://" + url;
+        }
+        tabs[currentTabIndex] = url;
+        document.getElementById("browser-frame").src = url;
     }
+});
+
+// 履歴管理
+let historyStack = [];
+let historyIndex = -1;
+
+document.getElementById("back-btn").addEventListener("click", function() {
+    if (historyIndex > 0) {
+        historyIndex--;
+        document.getElementById("browser-frame").src = historyStack[historyIndex];
+    }
+});
+
+document.getElementById("forward-btn").addEventListener("click", function() {
+    if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        document.getElementById("browser-frame").src = historyStack[historyIndex];
+    }
+});
+
+// 仮想ダウンロード機能
+function downloadFile(fileName) {
+    let listItem = document.createElement("li");
+    listItem.innerText = fileName + " (仮想ファイル)";
+    document.getElementById("download-list").appendChild(listItem);
 }
