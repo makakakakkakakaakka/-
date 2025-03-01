@@ -1,65 +1,92 @@
+/* 🖥️ 基本スタイル */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
+    background-image: url('wallpaper.jpg'); /* 壁紙 */
+    background-size: cover;
 }
 
+/* 🔹 デスクトップ */
 #desktop {
-    position: relative;
+    position: absolute;
+    width: 100%;
     height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
 }
 
+/* 🗂️ デスクトップアイコン */
+.desktop-icon {
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+}
+
+/* 📌 タスクバー */
 #taskbar {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #333;
+    height: 40px;
+    background-color: #222;
     color: white;
-    padding: 10px;
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    padding: 5px;
 }
 
-button {
-    background-color: #444;
+#start-button {
+    background: #333;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 5px 10px;
     cursor: pointer;
 }
 
-button:hover {
-    background-color: #555;
+#open-apps {
+    flex-grow: 1;
+    text-align: center;
 }
 
+#clock {
+    padding: 0 10px;
+}
+
+/* 📜 スタートメニュー */
+#start-menu {
+    position: fixed;
+    bottom: 40px;
+    left: 10px;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    display: none;
+}
+
+/* 🪟 アプリウィンドウ */
 .window {
     position: absolute;
     width: 400px;
     height: 300px;
     background-color: white;
     border: 2px solid #333;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .window-header {
-    background-color: #333;
+    background: #333;
     color: white;
     padding: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-}
-
-.close-btn {
-    background: none;
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
+    cursor: move;
 }
 
 .window-content {
     padding: 10px;
     overflow: auto;
+    height: calc(100% - 40px);
 }
