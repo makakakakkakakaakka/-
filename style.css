@@ -1,92 +1,91 @@
-/* 🖥️ 基本スタイル */
 body {
     font-family: Arial, sans-serif;
+    background-color: #282c34;
+    color: white;
     margin: 0;
     padding: 0;
-    background-image: url('wallpaper.jpg'); /* 壁紙 */
-    background-size: cover;
 }
 
-/* 🔹 デスクトップ */
 #desktop {
-    position: absolute;
-    width: 100%;
+    position: relative;
+    width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 20px;
 }
 
-/* 🗂️ デスクトップアイコン */
-.desktop-icon {
-    width: 80px;
-    text-align: center;
-    cursor: pointer;
+button {
+    padding: 10px;
     margin: 10px;
-}
-
-/* 📌 タスクバー */
-#taskbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    background-color: #222;
-    color: white;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-}
-
-#start-button {
-    background: #333;
+    background: #444;
     color: white;
     border: none;
-    padding: 5px 10px;
     cursor: pointer;
 }
 
-#open-apps {
-    flex-grow: 1;
-    text-align: center;
+button:hover {
+    background: #666;
 }
 
-#clock {
-    padding: 0 10px;
-}
-
-/* 📜 スタートメニュー */
-#start-menu {
-    position: fixed;
-    bottom: 40px;
-    left: 10px;
-    background: white;
-    border: 1px solid black;
-    padding: 10px;
-    display: none;
-}
-
-/* 🪟 アプリウィンドウ */
+/* 仮想ブラウザウィンドウ */
 .window {
+    display: none;
     position: absolute;
-    width: 400px;
-    height: 300px;
-    background-color: white;
-    border: 2px solid #333;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    width: 800px;
+    height: 600px;
+    top: 50px;
+    left: 50px;
+    background: white;
+    border: 2px solid black;
+    resize: both;
+    overflow: hidden;
 }
 
 .window-header {
-    background: #333;
+    background: #444;
     color: white;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     justify-content: space-between;
-    cursor: move;
+    cursor: grab;
 }
 
-.window-content {
+.browser-controls {
+    background: #ddd;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#url-input {
+    flex: 1;
+    padding: 5px;
+    margin: 0 5px;
+}
+
+iframe {
+    width: 100%;
+    height: 85%;
+    border: none;
+}
+
+/* タブスタイル */
+.tab {
+    background: #666;
+    padding: 5px;
+    margin: 2px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #999;
+}
+
+/* 仮想ダウンロードエリア */
+#downloads {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: #222;
     padding: 10px;
-    overflow: auto;
-    height: calc(100% - 40px);
+    border-radius: 5px;
 }
